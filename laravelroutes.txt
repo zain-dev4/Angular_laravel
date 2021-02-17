@@ -1,0 +1,7 @@
+//post api
+Route::post("/postapi","TestController@testapi");
+//get data
+Route::get("/getapiAngular","TestController@getapiAngular");
+//delete data
+Route::get("/delapiAngular/{data_id}","TestController@destroy");
+

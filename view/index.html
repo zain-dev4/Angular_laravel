@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="/assets/Angular/Angular-resource.js"></script>
+    <script src="/assets/Angular/angular-resource.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div ng-controller="firstController">
+    
+       <h2>Fetch data</h2>
+
+      <ol ng-repeat='data in items'>
+          <li > {{data.id}} </li>
+          <li >{{data.name}} </li>
+          <li >{{data.age}} </li>
+          <li >{{data.address}} </li>
+          <li ><Button class="btn  btn-info" ng-click="loadData(data)" ng-true-value="{{data.id}}"data-toggle="modal" data-target="#myModal">{{data.id}}Edit it</Button> </li>
+          <li ><Button class="btn  btn-danger" ng-click="Deletedata(data.id)" ng-true-value="{{data.id}}">{{data.id}}</Button> </li>
+      </ol>
+   <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <h2>Post data</h2>
+
+          
+          NAME : <input ng-model="editname" /><br/><br/>
+          
+          TAG : <input ng-model="editage" /><br/><br/>
+          ADRESS : <input ng-model="editadress" /><br/><br/>
+        
+        <input type="button" value="update" ng-click="updatedata(editid,editname, editage, editadress)" /> <br/><br/>
+        
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+      <button ng-click='getItems()'>click here to fetch data</button>
+      <div>
+          <h2>Post data</h2>
+
+        Name : <input ng-model="name" /><br/><br/>
+        
+        Age : <input ng-model="age" /><br/><br/>
+        
+        Adress : <input ng-model="adress" /><br/><br/>
+        
+        <input type="button" value="Send" ng-click="postdata(name, age, adress)" /> <br/><br/>
+        
+        </div>
+        
+        <p>Output Message : {{msg}}</p>
+        
+        <p>StatusCode: {{statusval}}</p>
+        
+        <p>Status: {{statustext}}</p>
+        
+        <p>Response Headers: {{headers}}</p>
+        
+        </div>
+    </div>
+        <script>
+
+        var myApp=angular.module("myApp",["ngResource"]);
+   
+ 
+        myApp.controller("firstController",function($scope,$http){
+      
+            //GET API        
+            $scope.getItems = function() {
+            $http(
+                {
+                    method : 'GET',
+                    url : 'https://ewdtech.com/testingApp/public/api/getapiAngular',
+                    // headers: { 'X-Parse-Application-Id':'XXXXXXXXXXXXX', 'X-Parse-REST-API-Key':'YYYYYYYYYYYYY'}
+                })
+                .then(function(res, status) {
+                    $scope.items = res.data;
+                    console.log(res.data);
+                })
+            }
+              //GET API     
+              //POST API 
+                $scope.postdata = function(name,age,adress)
+                {
+                    
+                    var data = {
+                        
+                        name : name,
+                        age : age,
+                        adress :  adress
+                    }
+                  
+                    var config = {
+             headers: {
+               'Authorization': 'Bearer 00000-e5673-346756f-8676-f7567561a'
+             }
+           };
+                      $http.post("https://ewdtech.com/testingApp/public/api/postapi",JSON.stringify(data),config).then(function(response){
+                            console.log(response)
+                            if(response.data)
+                            {
+                                $scope.msg = "Service not Exists";
+                                $scope.statusval = response.status;
+                                $scope.statustext = response.statusText;
+                                $scope.headers = response.headers();
+                            }
+                        });
+                }
+                //POST API    
+                 //DELETE API 
+                $scope.Deletedata = function(data_id)
+                {
+                  
+                    console.log(data_id);
+                    var data = {
+                        data_id : data_id,
+                       
+                    }
+                  
+                    var config = {
+             headers: {
+               'Authorization': 'Bearer 00000-e5673-346756f-8676-f7567561a'
+             }
+           };
+                      $http.get(`https://ewdtech.com/testingApp/public/api/delapiAngular/${data_id}`).then(function(response){
+                            // console.log(response)
+                            console.log(response.data)
+                            if(response.data)
+                            {
+                                $scope.headers = response.headers();
+                            }
+                        });
+                }
+                  //DELETE API 
+                //   load data for edit 
+                $scope.loadData=function(data){
+                    $scope.editid= data.id;
+                    $scope.editname= data.name;
+                    $scope.editage= data.age;
+                    $scope.editadress= data.address;
+                    
+                    
+                }  
+                //   load data for edit 
+                //update data after load 
+                
+                $scope.updatedata = function(editid,editname,editage,editadress)
+                {
+                    var data = {
+                        updateid : editid,
+                        updatename : editname,
+                        updateage : editage,
+                        updateaddress : editadress,
+                    }
+                    
+                  
+                    var config = {
+             headers: {
+               'Authorization': 'Bearer 00000-e5673-346756f-8676-f7567561a'
+             }
+           };
+                      $http.put(`https://ewdtech.com/testingApp/public/api/updtaeapi/${data.updateid}`).then(function(response){
+                            console.log(response)
+                            if(response.data)
+                            {
+                                $scope.msg = "Service not Exists";
+                                $scope.statusval = response.status;
+                                $scope.statustext = response.statusText;
+                                $scope.headers = response.headers();
+                            }
+                        });
+                }
+                 //update data after load 
+             });
+                
+ 
+    </script>
+</body>
+</html>

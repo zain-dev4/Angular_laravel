@@ -1,0 +1,116 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use app\Test;
+use app\User;
+use DB;
+use Illuminate\Auth\Events\Validated;
+class TestController extends Controller
+{
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+     public function  getapiAngular(){
+        $data=DB::table("testapi")->get();
+      
+        return response()->json($data);
+     }
+    public function index()
+    {
+        
+        return view("Test.index");
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view("Test.Create");
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+       dd("testing post api");
+        // $request->validate([
+        // "fname"=>"required",
+        // "lname"=>"required",
+        // "img"=>"required",
+        // ]);
+        // Test::create($request->all());
+        // return redirect()->back();
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+      
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+    
+          DB::delete('delete from testapi where id = ?',[$id]);
+        return response()->json("Data Deleted succesfully");
+    }
+    
+    public function testapi(Request $request)
+    {
+        // return response()->json(['name' => 'Abigail', 'state' => 'CA']);
+
+      DB::table('testapi')->insert([
+    'name' => $request->name,
+    'age' => $request->age,
+    'address' => $request->address
+]);
+        return response()->json($request);
+    }
+}
